@@ -37,6 +37,7 @@ __version__ = '$Revision: 15 $'
 class NodeList(list):
     pass
 
+
 # End of NodeList
 
 
@@ -62,6 +63,7 @@ class NodeManager(Thread):
         self.forward = NodeList()
         self.all = NodeList()
 
+
 # End of NodeManager
 
 
@@ -69,6 +71,7 @@ def _test():
     import doctest
     from pyny import nodelist
     return doctest.testmod(nodelist)
+
 
 if __name__ == '__main__':
     _test()

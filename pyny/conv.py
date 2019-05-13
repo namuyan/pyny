@@ -31,8 +31,16 @@
 from .nyexcept import *
 
 __version__ = '$Revision: 15 $'
-__all__ = ['hexstr', 'binary', 'get_cstring', 'int_to_packet',
-           'packet_to_int', 'packet_to_address', 'address_to_packet',]
+__all__ = [
+    'hexstr',
+    'binary',
+    'get_cstring',
+    'int_to_packet',
+    'packet_to_int',
+    'packet_to_address',
+    'address_to_packet',
+]
+
 
 def hexstr(binarydata):
     '''Make hex string from binary data.
@@ -43,7 +51,8 @@ def hexstr(binarydata):
     >>> hexstr('Aa')
     '4161'
     '''
-    return ''.join(['%02x'%ord(c) for c in binarydata])
+    return ''.join(['%02x' % ord(c) for c in binarydata])
+
 
 def binary(hexstring):
     '''Make binary data from hex string.
@@ -56,8 +65,9 @@ def binary(hexstring):
     '''
     buf = []
     for i in range(0, len(hexstring), 2):
-        buf.append(chr(int(hexstring[i:i+2], 16)))
+        buf.append(chr(int(hexstring[i:i + 2], 16)))
     return ''.join(buf)
+
 
 def get_cstring(s):
     '''Parse string and get C string.
@@ -69,6 +79,7 @@ def get_cstring(s):
         return s[:length]
     else:
         return s
+
 
 def int_to_packet(n):
     '''Make int packet form.
@@ -87,6 +98,7 @@ def int_to_packet(n):
     array[0] = chr((n & 0x000000ff))
     return ''.join(array)
 
+
 def packet_to_int(data):
     '''Make packet int.
 
@@ -97,9 +109,10 @@ def packet_to_int(data):
     123456789
     '''
     n = 0
-    for i in range(len(data)-1, -1, -1):
-        n = n * 256 + ord(data[i])
+    for i in range(len(data) - 1, -1, -1):
+        n = n*256 + ord(data[i])
     return n
+
 
 def packet_to_address(data):
     '''Convert 4 bite binary to IP address.
@@ -112,6 +125,7 @@ def packet_to_address(data):
     for i in range(4):
         address.append(str(ord(data[i])))
     return '.'.join(address)
+
 
 def address_to_packet(address):
     '''Convert IP address to 4 bite binary.

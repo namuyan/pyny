@@ -37,7 +37,6 @@ from .conv import hexstr, binary
 __all__ = ['Node']
 __version__ = '$Revision: 15 $'
 
-
 level = {'Hi': 16, 'Middle': 4, 'Low': 1}
 
 
@@ -78,14 +77,14 @@ class Node:
         return y.sortkey - self.sortkey
 
     def setvalue(self,
-                 correction = -1,
-                 priority = -1,
-                 speed = -1,
-                 address = '',
-                 port = 0,
-                 header = None,
-                 nodetype = '',
-                 nodeinfo = None):
+                 correction=-1,
+                 priority=-1,
+                 speed=-1,
+                 address='',
+                 port=0,
+                 header=None,
+                 nodetype='',
+                 nodeinfo=None):
         if correction > 0xFF:
             self.correction = 0xFF
         elif correction >= 0:
@@ -103,7 +102,7 @@ class Node:
             self.miner = header.minor
         if nodeinfo:
             self.clustering = nodeinfo.clustering
-            self.correlation = 0        # XXX
+            self.correlation = 0  # XXX
             # XXX
             # It may not work when DDNS.
             self.addr = nodeinfo.addr
@@ -125,7 +124,7 @@ class Node:
         Argument speed is self-node's.
         The constant 4.3 may not work.
         '''
-        return (speed*0.8 <= self.speed) and (self.speed <= speed*4.3)
+        return (speed * 0.8 <= self.speed) and (self.speed <= speed * 4.3)
 
     def can_downstream(self, speed):
         '''Check this node can be upstream node.
@@ -148,6 +147,7 @@ class Node:
     def connect(self):
         return nyconnection.Connection(self)
 
+
 # End of Node
 
 
@@ -169,11 +169,13 @@ def strnode(s):
     node.addr, node.port = addr, int(port)
     return node
 
+
 def RC4Key(checksum):
     '''RC4 key virtual class.
     '''
     magic = '\x6f\x70\x69\x65\x77\x66\x36\x61\x73\x63\x78\x6c\x76'
     return chr(checksum) + magic[1:]
+
 
 def pack_hash(inetaddrss):
     '''Pack internet address.
@@ -191,6 +193,7 @@ def pack_hash(inetaddrss):
     hash = '@' + hexstr(chr(checksum) + rc4.crypt(rc4key, inetaddrss))
     return hash
 
+
 def unpack_hash(hash):
     '''Unpack winny node format.
 
@@ -200,11 +203,10 @@ def unpack_hash(hash):
     >>> unpack_hash('@ba9582a383c7d6e79cd5d8c71f7347')
     '123.1.2.3:1234'
     '''
-    if len(hash) < 20:    # len('@^') + len('0.0.0.0:0') * 2 = 20
+    if len(hash) < 20:  # len('@^') + len('0.0.0.0:0') * 2 = 20
         raise NodeFormatError('Specified hash-string is too small')
     elif not hash.startswith('@'):
-        raise NodeFormatError(
-            'Specified hash-string is not hash-string of NodeAddress')
+        raise NodeFormatError('Specified hash-string is not hash-string of NodeAddress')
 
     sum = binary(hash[1:3])
     encoded = binary(hash[3:])
@@ -218,10 +220,12 @@ def unpack_hash(hash):
         raise NodeFormatError('sum check error')
     return unpackedstr
 
+
 def _test():
     import doctest
     from pyny import node
     return doctest.testmod(node)
+
 
 if __name__ == '__main__':
     _test()

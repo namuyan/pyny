@@ -31,14 +31,18 @@
 __version__ = '$Revision: 15 $'
 __all__ = ['NyError', 'NodeError', 'NodeFormatError', 'CommandError']
 
+
 class NyError(Exception):
     pass
+
 
 class NodeError(NyError):
     pass
 
+
 class NodeFormatError(NodeError):
     pass
+
 
 class CommandError(NyError):
     pass

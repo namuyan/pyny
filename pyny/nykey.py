@@ -47,6 +47,7 @@ address_size = 4
 short_size = 2
 int_size = 4
 
+
 class NyKeyInformation:
     '''Query Kye Information.
 
@@ -157,10 +158,12 @@ class NyKeyInformation:
         self.version = packet_to_int(packet.read(1))
         return str(packet)
 
+
 def _test():
     import doctest
     from pyny import nykey
     return doctest.testmod(nykey)
+
 
 if __name__ == '__main__':
     _test()

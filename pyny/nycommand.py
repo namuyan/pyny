@@ -61,47 +61,49 @@ from .nykey import NyKeyInformation
 from .nyexcept import *
 
 __version__ = '$Revision: 15 $'
-__all__ = ['NyProtocolHeader',
-           'NySpeed',
-           'NyConnectionType',
-           'NyNodeDetails',
-           'NyAnotherNode',
-           'NyBBSPort',
-           'NyDiffusionRequest',
-           'NyFileRequest',
-           'NyConditionalDiffusionRequest',
-           'ViaNode',
-           'NyQuery',
-           'NyFileResponse',
-           'CloseConnection',
-           'NyClose',
-           'NyConnectedLimitation',
-           'NyWrongListeningPort',
-           'NyReject',
-           'NySlow',
-           'NyLiar',
-           'NyLowVersion',
-           ]
+__all__ = [
+    'NyProtocolHeader',
+    'NySpeed',
+    'NyConnectionType',
+    'NyNodeDetails',
+    'NyAnotherNode',
+    'NyBBSPort',
+    'NyDiffusionRequest',
+    'NyFileRequest',
+    'NyConditionalDiffusionRequest',
+    'ViaNode',
+    'NyQuery',
+    'NyFileResponse',
+    'CloseConnection',
+    'NyClose',
+    'NyConnectedLimitation',
+    'NyWrongListeningPort',
+    'NyReject',
+    'NySlow',
+    'NyLiar',
+    'NyLowVersion',
+]
 
-int_size = 4                # bytes
-short_size = 2              # bytes
-float_size = 4              # bytes
+int_size = 4  # bytes
+short_size = 2  # bytes
+float_size = 4  # bytes
 address_size = int_size
 port_size = short_size
 node_size = address_size + port_size
-command_length_size = 4     # bytes
-code_size = 1               # bytes
+command_length_size = 4  # bytes
+code_size = 1  # bytes
 header_length = command_length_size + code_size
 major_version = 'Winny Ver2.0b1 (poeny)'
 minor_version = 12710
 sign_length = 11
+
 
 def make_step2key(step1key):
     '''What is this?
     '''
     step2key = []
     for c in step1key:
-        step2key.append(chr(ord(c)^0x39))
+        step2key.append(chr(ord(c) ^ 0x39))
     return ''.join(step2key)
 
 
@@ -167,10 +169,12 @@ class NyCommand:
     def __str__(self):
         return 'CommandCode(%d) Length(%d)' % (self.code, self.length)
 
+
 # End of NyCommand
 
 
 class NyRawCommand(NyCommand):
+
     def __init__(self, command_block):
         self.unpack(command_block)
 
@@ -180,12 +184,14 @@ class NyRawCommand(NyCommand):
         else:
             self.data = NyCommand.unpack(self, command)
 
+
 # End of NyRawCommand
 
 
 class UnpackMixIn:
     '''Unpack common method.
     '''
+
     def __init__(self, raw_command=None):
         if raw_command is not None:
             self.unpack(raw_command)
@@ -197,6 +203,7 @@ class UnpackMixIn:
         else:
             data = NyCommand.unpack(self, command, False)
             self._unpack(data)
+
 
 # End of UnpackMixIn
 
@@ -243,6 +250,7 @@ class NyProtocolHeader(UnpackMixIn, NyCommand):
         self.data = self.cert_crypt(data)
         return NyCommand.pack(self)
 
+
 # End of NyProtocolHeader
 
 
@@ -273,6 +281,7 @@ class NySpeed(UnpackMixIn, NyCommand):
     def pack(self):
         self.data = struct.pack('f', self.speed)
         return NyCommand.pack(self)
+
 
 # End of NySpeed
 
@@ -310,8 +319,7 @@ class NyConnectionType(UnpackMixIn, NyCommand):
                 self.linktypestr = k
                 break
         else:
-            raise CommandError(
-                    'ConnectionType: unknown LinkType "%d"' % linktype)
+            raise CommandError('ConnectionType: unknown LinkType "%d"' % linktype)
         self.isport0 = (data[1] != chr(0))
         self.isbadport0 = (data[2] != chr(0))
         self.isbbslink = (data[3] != chr(0))
@@ -323,11 +331,9 @@ class NyConnectionType(UnpackMixIn, NyCommand):
             self.linktype = self.linktypes[linktypestr]
 
     def pack(self):
-        self.data = [chr(self.linktype),
-                     chr(self.isport0),
-                     chr(self.isbadport0),
-                     chr(self.isbbslink)]
+        self.data = [chr(self.linktype), chr(self.isport0), chr(self.isbadport0), chr(self.isbbslink)]
         return NyCommand.pack(self)
+
 
 # End of NyConnectionType
 
@@ -359,7 +365,7 @@ class NyNodeDetails(UnpackMixIn, NyCommand):
     words = [''] * wordsize
 
     def _unpack(self, data):
-        headsize = 2*int_size + 1 + self.wordsize*1
+        headsize = 2*int_size + 1 + self.wordsize * 1
         if len(data) < headsize:
             raise CommandError('NodeDetails: length is too small')
         self.address = packet_to_address(data[0:4])
@@ -367,15 +373,15 @@ class NyNodeDetails(UnpackMixIn, NyCommand):
         hostlen = ord(data[8])
         wordslen = []
         for i in range(self.wordsize):
-            wordslen.append(ord(data[9+i]))
+            wordslen.append(ord(data[9 + i]))
 
         if len(data) != headsize + hostlen + \
                         wordslen[0] + wordslen[1] + wordslen[2]:
             raise CommandError('NodeDetails: illegal length')
-        self.host = data[headsize:headsize+hostlen]
+        self.host = data[headsize:headsize + hostlen]
         offset = headsize + hostlen
         for i in range(self.wordsize):
-            self.words[i] = data[offset:offset+wordslen[i]]
+            self.words[i] = data[offset:offset + wordslen[i]]
             offset += wordslen[i]
         self.data = None
 
@@ -391,6 +397,7 @@ class NyNodeDetails(UnpackMixIn, NyCommand):
         for i in range(len(self.words)):
             self.data += self.words[i]
         return NyCommand.pack(self)
+
 
 # End of NyNodeDetails
 
@@ -428,7 +435,7 @@ class NyAnotherNode(UnpackMixIn, NyCommand):
     words = [''] * wordsize
 
     def _unpack(self, data):
-        headsize = 3*int_size + 1 + int_size + self.wordsize*1
+        headsize = 3*int_size + 1 + int_size + self.wordsize * 1
         if len(data) < headsize:
             raise CommandError('NyAnotherNode: command is too small')
         self.address = packet_to_address(data[0:4])
@@ -438,10 +445,10 @@ class NyAnotherNode(UnpackMixIn, NyCommand):
         self.speed = packet_to_int(data[13:17])
         wordslen = []
         for i in range(self.wordsize):
-            wordslen.append(ord(data[17+i]))
+            wordslen.append(ord(data[17 + i]))
         offset = headsize
         for i in range(self.wordsize):
-            self.words[i] = data[offset:offset+wordslen[i]]
+            self.words[i] = data[offset:offset + wordslen[i]]
             offset += wordslen[i]
         self.data = None
 
@@ -458,6 +465,7 @@ class NyAnotherNode(UnpackMixIn, NyCommand):
         for i in range(len(self.words)):
             self.data += self.words[i]
         return NyCommand.pack(self)
+
 
 # End of NyAnotherNode
 
@@ -489,6 +497,7 @@ class NyBBSPort(UnpackMixIn, NyCommand):
         self.data = int_to_packet(self.bbs_port)
         return NyCommand.pack(self)
 
+
 # End of NyBBSPort
 
 
@@ -508,6 +517,7 @@ class NyDiffusionRequest(UnpackMixIn, NyCommand):
 
     def _unpack(self, data):
         self.data = None
+
 
 # End of NyDiffusionRequest
 
@@ -534,7 +544,7 @@ class NyFileRequest(UnpackMixIn, NyCommand):
     task_id = 0
     block_begin = 0
     block_size = 0
-    hash = chr(0)*16
+    hash = chr(0) * 16
     file_size = 0
     packetsize = 3*int_size + 16 + int_size
 
@@ -560,7 +570,8 @@ class NyFileRequest(UnpackMixIn, NyCommand):
         if hash is not None:
             self.hash = hash[:16]
             if len(self.hash) < 16:
-                self.hash += chr(0)*(16-len(self.hash))
+                self.hash += chr(0) * (16 - len(self.hash))
+
 
 # End of NyFileRequest
 
@@ -591,22 +602,22 @@ class NyConditionalDiffusionRequest(UnpackMixIn, NyCommand):
 
     def _unpack(self, data):
         if len(data) != self.packetsize:
-            raise CommandError('NyConditionalDiffusionRequest: ' +
-                               'command is too small or too long')
+            raise CommandError('NyConditionalDiffusionRequest: ' + 'command is too small or too long')
         self.keyword = data[0:self.keywordsize]
         self.keyword = self.keyword.replace(chr(0), '')
-        self.sign = data[self.keywordsize:self.keywordsize+self.signsize]
+        self.sign = data[self.keywordsize:self.keywordsize + self.signsize]
         self.sign = self.sign.replace(chr(0), '')
-        self.query_id = packet_to_int(data[self.keywordsize+self.signsize:])
+        self.query_id = packet_to_int(data[self.keywordsize + self.signsize:])
         self.data = None
 
     def pack(self):
-        self.keyword = self.keyword[:self.keywordsize-1]
-        self.sign = self.sign[:self.signsize-1]
-        self.data = self.keyword+chr(0)*(self.keywordsize-len(self.keyword))
-        self.data += self.sign + chr(0)*(self.signsize-len(self.sign))
+        self.keyword = self.keyword[:self.keywordsize - 1]
+        self.sign = self.sign[:self.signsize - 1]
+        self.data = self.keyword + chr(0) * (self.keywordsize - len(self.keyword))
+        self.data += self.sign + chr(0) * (self.signsize - len(self.sign))
         self.data += int_to_packet(self.query_id)
         return NyCommand.pack(self)
+
 
 # End of NyConditionalDiffusionRequest
 
@@ -640,6 +651,7 @@ class ViaNode:
     def unpack(self, data):
         self.address = packet_to_address(data[:address_size])
         self.port = packet_to_int(data[address_size:])
+
 
 # End of ViaNode
 
@@ -756,6 +768,7 @@ class NyQuery(UnpackMixIn, NyCommand):
             self.data += i.pack()
         return NyCommand.pack(self)
 
+
 # End of NyQuery
 
 
@@ -779,7 +792,7 @@ class NyFileResponse(UnpackMixIn, NyCommand):
     code = 21
     task_id = 0
     block_begin = 0
-    hash = chr(0)*16
+    hash = chr(0) * 16
     file_data = ''
     data_limit = 0x10000
     header_size = 2*int_size + 16
@@ -790,7 +803,7 @@ class NyFileResponse(UnpackMixIn, NyCommand):
         self.task_id = packet_to_int(data[0:4])
         self.block_begin = packet_to_int(data[4:8])
         self.hash = data[8:24]
-        self.file_data = data[24:24+self.data_limit]
+        self.file_data = data[24:24 + self.data_limit]
         self.data = None
 
     def pack(self):
@@ -803,7 +816,7 @@ class NyFileResponse(UnpackMixIn, NyCommand):
         if hash is not None:
             self.hash = hash[:16]
             if len(self.hash) < 16:
-                self.hash += chr(0)*(16-len(self.hash))
+                self.hash += chr(0) * (16 - len(self.hash))
         if file_data is not None:
             self.file_data = file_data[:self.data_limit]
 
@@ -812,6 +825,7 @@ class NyFileResponse(UnpackMixIn, NyCommand):
                int_to_packet(self.block_begin) + \
                self.hash + \
                self.file_data + chr(0)*(self.data_limit-len(self.file_data))
+
 
 # End of NyFileResponse
 
@@ -827,26 +841,33 @@ class CloseConnection(UnpackMixIn, NyCommand):
     def _unpack(self, data):
         self.data = None
 
+
 # End of CloseConnection
 
 
 class NyClose(CloseConnection):
     code = 31
 
+
 class NyConnectedLimitation(CloseConnection):
     code = 32
+
 
 class NyWrongListeningPort(CloseConnection):
     code = 33
 
+
 class NyReject(CloseConnection):
     code = 34
+
 
 class NySlow(CloseConnection):
     code = 35
 
+
 class NyLiar(CloseConnection):
     code = 36
+
 
 class NyLowVersion(CloseConnection):
     code = 97
@@ -856,6 +877,7 @@ def _test():
     import doctest
     from pyny import nycommand
     return doctest.testmod(nycommand)
+
 
 if __name__ == '__main__':
     _test()

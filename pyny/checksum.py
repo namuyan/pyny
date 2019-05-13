@@ -28,7 +28,6 @@
 # $Id: $
 #
 
-
 __version__ = '$Revision: $'
 __all__ = ['sum16', 'sum32']
 

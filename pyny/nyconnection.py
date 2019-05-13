@@ -48,14 +48,9 @@ class Register:
     command_offset = 0
     packlen = 0
     recvlen = 0
-    phase = 0       # 0, 1, 2
+    phase = 0  # 0, 1, 2
 
-    def save(self,
-             tail = None,
-             command_offset = None,
-             packlen = None,
-             recvlen = None,
-             phase = None):
+    def save(self, tail=None, command_offset=None, packlen=None, recvlen=None, phase=None):
         if tail is not None:
             self.tail = tail
         if command_offset is not None:
@@ -77,6 +72,7 @@ class Register:
         self.packlen = 0
         self.recvlen = 0
         self.phase = 0
+
 
 # End of Register
 
@@ -142,10 +138,12 @@ def random_data(size):
         buf.append(chr(random.randint(0, 255)))
     return ''.join(buf)
 
+
 def _test():
     import doctest
     from pyny import node
     return doctest.testmod(node)
+
 
 if __name__ == '__main__':
     _test()

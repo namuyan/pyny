@@ -31,6 +31,7 @@
 __version__ = '$Revision: 15 $'
 __all__ = ['crypt']
 
+
 class RC4:
     '''RC4 for Winny.
     '''
@@ -78,8 +79,9 @@ class RC4:
             self.m_y = y
             self.m_state[y] = sx
             self.m_state[x] = sy
-            dest.append(chr(ord(c) ^ self.m_state[(sx+sy)&0xFF]))
+            dest.append(chr(ord(c) ^ self.m_state[(sx + sy) & 0xFF]))
         return ''.join(dest)
+
 
 def crypt(key, src):
     '''RC4 crypt for Winny.
@@ -101,10 +103,12 @@ def crypt(key, src):
     '''
     return RC4(key).crypt(src)
 
+
 def _test():
     import doctest
     from pyny import rc4
     return doctest.testmod(rc4)
+
 
 if __name__ == '__main__':
     _test()

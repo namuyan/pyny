@@ -36,10 +36,11 @@ from . import config
 __all__ = ['start']
 __version__ = '$Revision: 3 $'
 
-
 _server = None
 
+
 class NyServer(ThreadingTCPServer, Thread):
+
     def __init__(self, port):
         Thread.__init__(self)
         address = ('', port)
@@ -55,10 +56,12 @@ class NyServer(ThreadingTCPServer, Thread):
         '''
         return False
 
+
 # End of NyServer
 
 
 class NyRequestHandler(StreamRequestHandler):
+
     def handle(self):
         '''Server main loop.
         '''
@@ -78,6 +81,7 @@ class NyRequestHandler(StreamRequestHandler):
                 break
             self.wfile.write(buf)
 
+
 # End of NyRequestHandler
 
 
@@ -87,10 +91,12 @@ def start():
     _server.start()
     return _server
 
+
 def _test():
     #import doctest, nodelist
     #return doctest.testmod(nodelist)
     start()
+
 
 if __name__ == '__main__':
     _test()
