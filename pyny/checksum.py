@@ -57,8 +57,10 @@ def sum32(data):
 
 
 def _test():
-    import doctest, checksum
+    import doctest
+    from pyny import checksum
     return doctest.testmod(checksum)
+
 
 if __name__ == '__main__':
     _test()

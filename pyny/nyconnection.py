@@ -28,14 +28,11 @@
 # $Id: node.py 3 2006-03-06 01:03:41Z fuktommy $
 #
 
-import socket
 import random
 from time import time
 
-import rc4
-import nycommand
-from nyexcept import *
-from conv import hexstr, binary
+from . import rc4
+from . import nycommand
 
 __all__ = ['Connection']
 __version__ = '$Revision: 15 $'
@@ -122,11 +119,11 @@ class Connection:
         '''Connection time length. (seconds).
         '''
         return int(time()) - self.start_time
-        
+
     def authorize(self):
         self.init_block = random_data(6)
         self.rc4key = rc4.RC4(self.init_block[2:6])
-        header = NyProtocolHeader()
+        header = nycommand.NyProtocolHeader()
         header.major = nycommand.major_version
         header.minor = nycommand.minor_version
 
@@ -146,7 +143,8 @@ def random_data(size):
     return ''.join(buf)
 
 def _test():
-    import doctest, node
+    import doctest
+    from pyny import node
     return doctest.testmod(node)
 
 if __name__ == '__main__':

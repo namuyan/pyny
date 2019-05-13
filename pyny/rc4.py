@@ -54,13 +54,13 @@ class RC4:
             key = key[:length]
         self.m_x = 0
         self.m_y = 0
-        self.m_state = range(256)
+        self.m_state = list(range(256))
         if len(key) == 0:
             return
         ki = 0
         si = 0
         for i in range(len(self.m_state)):
-            si = (si + ord(key[ki]) + self.m_state[i]) & 0xFF;
+            si = (si + ord(key[ki]) + self.m_state[i]) & 0xFF
             self.m_state[si], self.m_state[i] = \
                 self.m_state[i], self.m_state[si]
             ki += 1
@@ -85,7 +85,7 @@ def crypt(key, src):
     '''RC4 crypt for Winny.
 
     sample:
-    >>> from conv import hexstr
+    >>> from pyny.conv import hexstr
     >>> key = '\\xD2\\x46\\xAD\\x10'
     >>> src = '\\xDC\\x9A\\x1E\\xF9\\x71\\xAE\\xC3\\x4C' + \\
     ...       '\\x8A\\xFD\\x8B\\xE9\\x88\\x7A\\x7B\\x21' + \\
@@ -102,7 +102,8 @@ def crypt(key, src):
     return RC4(key).crypt(src)
 
 def _test():
-    import doctest, rc4
+    import doctest
+    from pyny import rc4
     return doctest.testmod(rc4)
 
 if __name__ == '__main__':

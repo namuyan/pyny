@@ -29,10 +29,9 @@
 #
 
 from threading import Thread
-from SocketServer import ThreadingTCPServer, StreamRequestHandler
+from socketserver import ThreadingTCPServer, StreamRequestHandler
 
-import config
-from node import Node
+from . import config
 
 __all__ = ['start']
 __version__ = '$Revision: 3 $'

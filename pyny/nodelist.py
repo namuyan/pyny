@@ -30,9 +30,6 @@
 
 from threading import Thread
 
-import config
-from node import Node
-
 __all__ = ['NodeManager']
 __version__ = '$Revision: 15 $'
 
@@ -69,7 +66,8 @@ class NodeManager(Thread):
 
 
 def _test():
-    import doctest, nodelist
+    import doctest
+    from pyny import nodelist
     return doctest.testmod(nodelist)
 
 if __name__ == '__main__':

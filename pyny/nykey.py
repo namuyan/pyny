@@ -33,12 +33,12 @@ http:/www.amazon.co.jp/exec/obidos/ASIN/4756145485
 #
 
 import re
-from StringIO import StringIO
+from io import StringIO
 
-import rc4
-from conv import *
-from checksum import sum16
-from nyexcept import *
+from . import rc4
+from .conv import *
+from .checksum import sum16
+from .nyexcept import *
 
 __version__ = '$Revision: $'
 __all__ = ['NyKeyInformation']
@@ -158,7 +158,8 @@ class NyKeyInformation:
         return str(packet)
 
 def _test():
-    import doctest, nykey
+    import doctest
+    from pyny import nykey
     return doctest.testmod(nykey)
 
 if __name__ == '__main__':

@@ -28,11 +28,11 @@
 # $Id: node.py 15 2006-12-10 06:23:36Z fuktommy $
 #
 
-import rc4
-import config
-import nyconnection
-from nyexcept import *
-from conv import hexstr, binary
+from . import rc4
+from . import config
+from . import nyconnection
+from .nyexcept import *
+from .conv import hexstr, binary
 
 __all__ = ['Node']
 __version__ = '$Revision: 15 $'
@@ -48,7 +48,7 @@ class Node:
     - isknown
     - priority          (0<=priority<=0xFF)
     - correlation       (it is not priority, 0<=correction<=0xFF)
-    - major             Application name 
+    - major             Application name
     - minor             Version
     - addr              IPv4 address
     - port              Port number
@@ -112,7 +112,7 @@ class Node:
 
         # XXX
         # It may not work when DDNS.
-        if nodetype and (noderype == 'Port0'):
+        if nodetype and (nodetype == 'Port0'):
             self.type = 'Port0'
         elif nodeinfo and (self.addr == self.reported_address):
             self.type = 'Raw'
@@ -219,7 +219,8 @@ def unpack_hash(hash):
     return unpackedstr
 
 def _test():
-    import doctest, node
+    import doctest
+    from pyny import node
     return doctest.testmod(node)
 
 if __name__ == '__main__':

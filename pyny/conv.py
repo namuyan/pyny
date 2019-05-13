@@ -28,11 +28,11 @@
 # $Id: conv.py 15 2006-12-10 06:23:36Z fuktommy $
 #
 
-from nyexcept import *
+from .nyexcept import *
 
 __version__ = '$Revision: 15 $'
 __all__ = ['hexstr', 'binary', 'get_cstring', 'int_to_packet',
-           'packet_to_int', 'packet_to_address', 'address_to_packet']
+           'packet_to_int', 'packet_to_address', 'address_to_packet',]
 
 def hexstr(binarydata):
     '''Make hex string from binary data.
@@ -76,7 +76,7 @@ def int_to_packet(n):
     Winny packet is little endian.
 
     Sample:
-    >>> from conv import hexstr
+    >>> from pyny.conv import hexstr
     >>> hexstr(int_to_packet(123456789))
     '15cd5b07'
     '''
@@ -117,7 +117,7 @@ def address_to_packet(address):
     '''Convert IP address to 4 bite binary.
 
     Sample:
-    >>> from conv import hexstr
+    >>> from pyny.conv import hexstr
     >>> hexstr(address_to_packet('192.168.1.10'))
     'c0a8010a'
     '''
@@ -132,9 +132,12 @@ def address_to_packet(address):
         bin.append(chr(i))
     return ''.join(bin)
 
+
 def _test():
-    import doctest, conv
+    import doctest
+    from pyny import conv
     return doctest.testmod(conv)
+
 
 if __name__ == '__main__':
     _test()

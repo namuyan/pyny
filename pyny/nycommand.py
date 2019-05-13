@@ -53,35 +53,35 @@ Command code table (copied from Poeny):
 
 import re
 import struct
-from StringIO import StringIO
+from io import StringIO
 
-import rc4
-from conv import *
-from nykey import NyKeyInformation
-from nyexcept import *
+from . import rc4
+from .conv import *
+from .nykey import NyKeyInformation
+from .nyexcept import *
 
 __version__ = '$Revision: 15 $'
 __all__ = ['NyProtocolHeader',
            'NySpeed',
-           ' NySpeed',
-           ' NyConnectionType',
-           ' NyNodeDetails',
-           ' NyAnotherNode',
-           ' NyBBSPort',
-           ' NyDiffusionRequest',
-           ' NyFileRequest',
-           ' NyConditionalDiffusionRequest',
-           ' ViaNode:
-           ' NyQuery',
-           ' NyFileResponse',
-           ' CloseConnection,
-           ' NyClose',
-           ' NyConnectedLimitation',
-           ' NyWrongListeningPort',
-           ' NyReject',
-           ' NySlow',
-           ' NyLiar',
-           ' NyLowVersion']
+           'NyConnectionType',
+           'NyNodeDetails',
+           'NyAnotherNode',
+           'NyBBSPort',
+           'NyDiffusionRequest',
+           'NyFileRequest',
+           'NyConditionalDiffusionRequest',
+           'ViaNode',
+           'NyQuery',
+           'NyFileResponse',
+           'CloseConnection',
+           'NyClose',
+           'NyConnectedLimitation',
+           'NyWrongListeningPort',
+           'NyReject',
+           'NySlow',
+           'NyLiar',
+           'NyLowVersion',
+           ]
 
 int_size = 4                # bytes
 short_size = 2              # bytes
@@ -114,7 +114,7 @@ class NyCommand:
     header_length = 0
 
     def __len__(self):
-        return length
+        return self.length
 
     def unpack(self, command_block, unpack_all=True):
         '''Unpack packet style command.
@@ -811,7 +811,7 @@ class NyFileResponse(UnpackMixIn, NyCommand):
         return int_to_packet(self.task_id) + \
                int_to_packet(self.block_begin) + \
                self.hash + \
-               self.file_data + chr(0)*(data_limit-len(self.file_data))
+               self.file_data + chr(0)*(self.data_limit-len(self.file_data))
 
 # End of NyFileResponse
 
@@ -853,7 +853,8 @@ class NyLowVersion(CloseConnection):
 
 
 def _test():
-    import doctest, nycommand
+    import doctest
+    from pyny import nycommand
     return doctest.testmod(nycommand)
 
 if __name__ == '__main__':
